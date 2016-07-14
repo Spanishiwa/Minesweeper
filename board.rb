@@ -64,8 +64,14 @@ class Board
     r, c = pos
     scan_range = [ [r, (c-1)], [(r-1), (c-1)], [(r-1), (c-1)], [r, (c+1)],\
     [(r+1), (c+1)], [(r-1), (c+1)], [r, (c+1)], [(r+1), c] ]
-    
 
+    scan_range.select{|arr| valid_pos?(arr)}
+
+  end
+
+  def valid_pos?(arr)
+    r, c = arr
+    r >=0 && r < @row && c >= 0 && c < @col
   end
 
 end
