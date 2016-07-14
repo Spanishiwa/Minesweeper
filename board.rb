@@ -38,8 +38,8 @@ class Board
     @rows = @board.length
     @cols = @board.first.length
     available_pos = []
-    (0...rows).each do |row|
-      (0...cols).each do |col|
+    (0...@rows).each do |row|
+      (0...@cols).each do |col|
         available_pos << [row, col]
       end
     end
@@ -56,14 +56,35 @@ class Board
   end
 
   def populate_numbers
-
-
+    @known_bomb_pos.each do |pos|
+      scan_positions(pos).each do |pos2|
+        populate_scanned(pos2)
+      end
+    end
   end
 
-  def check_valid_positions(pos)
+  def populate_scanned(pos)
     r, c = pos
-    scan_range = [ [r, (c-1)], [(r-1), (c-1)], [(r-1), (c-1)], [r, (c+1)],\
-    [(r+1), (c+1)], [(r-1), (c+1)], [r, (c+1)], [(r+1), c] ]
+    if board[r][c].nil?
+      board[r][c] = Tile.new(1)
+    elsif board[r][c].value != "X"
+      board[r][c] = Tile.new(1+board[r][c].value)
+    end
+  end
+
+  def scan_positions(pos)
+    r, c = pos
+    # scan_range = [ [r, (c-1)], [(r+1), (c-1)], [(r-1), (c-1)], [r, (c+1)],\
+    # [(r+1), (c+1)], [(r-1), (c+1)], [r, (c+1)], [(r+1), c] ]
+    left = [r, c-1]
+    uleft = [r-1, c-1]
+    up = [r-1, c]
+    uright = [r-1, c+1]
+    right = [r, c+1]
+    dright = [r+1, c+1]
+    down = [r+1, c]
+    dleft = [r+1, c-1]
+    scan_range = [left, uleft, up, uright, right, dright, down, dleft]
 
     scan_range.select{|arr| valid_pos?(arr)}
 
@@ -71,7 +92,7 @@ class Board
 
   def valid_pos?(arr)
     r, c = arr
-    r >=0 && r < @row && c >= 0 && c < @col
+    r >= 0 && r < @rows && c >= 0 && c < @cols
   end
 
 end
