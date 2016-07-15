@@ -24,7 +24,7 @@ class Board
     p "   #{(0..8).to_a.join("  ")}"
     board.each_with_index do |row, id|
       new_row = row.map do |el|
-        if el.nil? #|| !el.revealed
+        if el.nil? || !el.revealed
           "$"
         else
           el.value
@@ -106,7 +106,8 @@ class Board
         r, c = arr
         board[r][c] = Tile.new(" ", true)
       end
-
+    else
+      self[pos].reveal_tile
     end
   end
 
