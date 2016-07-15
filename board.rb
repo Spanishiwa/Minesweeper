@@ -74,7 +74,7 @@ class Board
     end
   end
 
-  def scan_positions(pos)
+  def scan_positions(pos, for_nil = false)
     r, c = pos
     # scan_range = [ [r, (c-1)], [(r+1), (c-1)], [(r-1), (c-1)], [r, (c+1)],\
     # [(r+1), (c+1)], [(r-1), (c+1)], [r, (c+1)], [(r+1), c] ]
@@ -87,7 +87,8 @@ class Board
     dright = [r+1, c+1]
     down = [r+1, c]
     dleft = [r+1, c-1]
-    scan_range = [left, uleft, up, uright, right, dright, down, dleft]
+    scan_range = [left, uleft, up, uright, right, dright, down, dleft] unless for_nil
+    scan_range = [left, up, right, down] if for_nil
 
     scan_range.select{|arr| valid_pos?(arr)}
 
@@ -101,23 +102,10 @@ class Board
   def place_move(pos)
     raise "Invalid move" unless valid_pos?(pos)
     if self[pos].nil?
-      find_nil_positions(pos)
-      # nil_positions = [pos]
-      # start_positions = [pos]
-      # byebug
-      # until start_positions.empty?
-      #   new_positions = []
-      #   start_positions.each do |pos|
-      #     scan_positions(pos).each do |adj_pos|
-      #       next if nil_positions.include?(adj_pos)
-      #       if self[adj_pos].nil?
-      #         nil_positions << adj_pos
-      #         new_positions << adj_pos
-      #       end
-      #     end
-      #   end
-      #   start_positions = new_positions
-      # end
+      find_nil_positions(pos).each do |arr|
+        r, c = arr
+        board[r][c] = Tile.new(" ", true)
+      end
 
     end
   end
@@ -125,11 +113,11 @@ class Board
   def find_nil_positions(pos)
     nil_positions = [pos]
     start_positions = [pos]
-    byebug
+    # byebug
     until start_positions.empty?
       new_positions = []
       start_positions.each do |pos|
-        scan_positions(pos).each do |adj_pos|
+        scan_positions(pos, true).each do |adj_pos|
           next if nil_positions.include?(adj_pos)
           if self[adj_pos].nil?
             nil_positions << adj_pos

@@ -2,10 +2,10 @@ class Tile
 
   attr_reader :value, :revealed
 
-  def initialize(value)
+  def initialize(value, revealed = false)
     @value = value  # X, 1, _
 
-    @revealed = false
+    @revealed = revealed
   end
 
   def reveal_tile
