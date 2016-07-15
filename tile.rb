@@ -1,6 +1,6 @@
 class Tile
 
-  attr_reader :value
+  attr_reader :value, :revealed
 
   def initialize(value)
     @value = value  # X, 1, _
@@ -10,10 +10,6 @@ class Tile
 
   def reveal_tile
     @revealed = true
-  end
-
-  def neighbor_bomb_count
-
   end
 
   def bomb?
