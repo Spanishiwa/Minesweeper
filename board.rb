@@ -1,11 +1,13 @@
 require './tile'
 require "byebug"
 class Board
-  attr_accessor :board, :seen_positions
+  attr_accessor :board, :seen_positions, :rows, :cols
 
   def initialize
     @board = Array.new(9) { Array.new(9) }
     @known_bomb_pos = []
+    @rows = @board.length
+    @cols = @board.first.length
   end
 
   def [](pos)
@@ -37,8 +39,6 @@ class Board
 
 
   def get_random_positions
-    @rows = @board.length
-    @cols = @board.first.length
     available_pos = []
     (0...@rows).each do |row|
       (0...@cols).each do |col|
